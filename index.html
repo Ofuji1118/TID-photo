@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>学園祭フォトサービス</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --card: #ffffff;
+      --text: #222222;
+      --sub: #666666;
+      --main: #111111;
+      --accent: #2f5d50;
+      --danger: #b3261e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47, 93, 80, 0.16), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding: 36px 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 24px;
+      padding: 30px 24px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.10);
+      text-align: center;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #edf4f1;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.02em;
+    }
+
+    .lead {
+      margin: 14px 0 26px;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .input-area {
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px 14px;
+      border: 1px solid #d4d4d4;
+      border-radius: 14px;
+      font-size: 20px;
+      text-align: center;
+      letter-spacing: 0.12em;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(47, 93, 80, 0.12);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: none;
+      border-radius: 14px;
+      background: var(--main);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .error {
+      display: none;
+      margin-top: 14px;
+      color: var(--danger);
+      font-weight: 700;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .steps {
+      margin-top: 28px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #f7f7f7;
+      text-align: left;
+    }
+
+    .steps h2 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+
+    .steps ol {
+      margin: 0;
+      padding-left: 22px;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.9;
+    }
+
+    .note {
+      margin-top: 22px;
+      color: #6b6b6b;
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: left;
+    }
+
+    footer {
+      margin-top: 18px;
+      color: #888;
+      font-size: 11px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <span class="label">FREE PHOTO SERVICE</span>
+      <h1>学園祭フォトサービス</h1>
+      <p class="lead">
+        受付で受け取った写真IDを入力してください。<br>
+        撮影データを1組につき1枚お渡しします。
+      </p>
+
+      <div class="input-area">
+        <label for="photoId">写真ID</label>
+        <input
+          type="text"
+          id="photoId"
+          placeholder="例：58392047"
+          autocomplete="off"
+          inputmode="text"
+        >
+        <button type="button" onclick="openPhoto()">写真を確認する</button>
+        <p class="error" id="error">写真IDを入力してください。</p>
+      </div>
+
+      <div class="steps">
+        <h2>受け取り手順</h2>
+        <ol>
+          <li>受付で受け取った写真IDを入力</li>
+          <li>専用ページで写真を確認</li>
+          <li>ダウンロードボタンから保存</li>
+        </ol>
+      </div>
+
+      <p class="note">
+        ※ 本サービスは学園祭内の無料企画です。<br>
+        ※ 写真URLや写真IDを第三者に共有しないでください。<br>
+        ※ SNSへ投稿する場合は、写っている人の許可を取ってください。<br>
+        ※ 公開期間終了後、写真データは削除する場合があります。
+      </p>
+    </section>
+
+    <footer>Gakusai Photo Service</footer>
+  </main>
+
+  <script>
+    function normalizeId(value) {
+      return value.trim().replace(/\s+/g, "").toUpperCase();
+    }
+
+    function openPhoto() {
+      const id = normalizeId(document.getElementById("photoId").value);
+      const error = document.getElementById("error");
+
+      if (id === "") {
+        error.style.display = "block";
+        return;
+      }
+
+      error.style.display = "none";
+      location.href = "photo.html?id=" + encodeURIComponent(id);
+    }
+
+    document.getElementById("photoId").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        openPhoto();
+      }
+    });
+  </script>
+</body>
+</html>

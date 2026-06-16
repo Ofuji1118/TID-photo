@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>写真受け取りページ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      --bg: #101010;
+      --panel: #1a1a1a;
+      --text: #ffffff;
+      --sub: #b8b8b8;
+      --danger-bg: #2b1717;
+      --danger: #ffd1d1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      padding: 28px 16px 42px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .photo-id {
+      margin: 8px 0 22px;
+      color: var(--sub);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .photo-box {
+      background: var(--panel);
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+    }
+
+    img {
+      width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+      border-radius: 12px;
+      display: block;
+      background: #222;
+    }
+
+    .btn {
+      display: block;
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .download {
+      background: #fff;
+      color: #111;
+    }
+
+    .back {
+      background: #292929;
+      color: #fff;
+    }
+
+    .message {
+      display: none;
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 14px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .note {
+      margin-top: 22px;
+      color: #aaa;
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>写真受け取りページ</h1>
+    <p class="photo-id" id="idText"></p>
+
+    <div class="photo-box" id="photoBox">
+      <img id="photo" src="" alt="撮影写真">
+    </div>
+
+    <a id="downloadBtn" class="btn download" href="" download>写真をダウンロード</a>
+    <a class="btn back" href="index.html">ID入力ページへ戻る</a>
+
+    <div class="message" id="errorMessage">
+      写真がまだ準備されていないか、写真IDが間違っています。<br>
+      IDを確認し、少し時間を置いてから再読み込みしてください。
+    </div>
+
+    <p class="note">
+      ※ この写真はご本人・同行者の範囲でお楽しみください。<br>
+      ※ 写真URLや写真IDを第三者に共有しないでください。<br>
+      ※ SNSへ投稿する場合は、写っている人の許可を取ってください。<br>
+      ※ 公開期間終了後、写真データは削除する場合があります。
+    </p>
+  </main>
+
+  <script>
+    function showError(message) {
+      const photoBox = document.getElementById("photoBox");
+      const downloadBtn = document.getElementById("downloadBtn");
+      const errorMessage = document.getElementById("errorMessage");
+
+      if (message) {
+        errorMessage.innerHTML = message;
+      }
+
+      photoBox.style.display = "none";
+      downloadBtn.style.display = "none";
+      errorMessage.style.display = "block";
+    }
+
+    function normalizeId(value) {
+      return value.trim().replace(/\s+/g, "").toUpperCase();
+    }
+
+    const params = new URLSearchParams(location.search);
+    const id = normalizeId(params.get("id") || "");
+
+    const idText = document.getElementById("idText");
+    const photo = document.getElementById("photo");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    if (!id) {
+      idText.textContent = "写真IDが指定されていません。";
+      showError("写真IDが指定されていません。<br>ID入力ページから写真IDを入力してください。");
+    } else {
+      const imagePath = "images/" + id + ".jpg";
+
+      idText.textContent = "写真ID：" + id;
+      photo.src = imagePath;
+      downloadBtn.href = imagePath;
+      downloadBtn.setAttribute("download", id + ".jpg");
+
+      photo.onerror = function() {
+        idText.textContent = "写真ID：" + id;
+        showError("写真がまだ準備されていないか、写真IDが間違っています。<br>IDを確認し、少し時間を置いてから再読み込みしてください。");
+      };
+    }
+  </script>
+</body>
+</html>
